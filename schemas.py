@@ -1,6 +1,11 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
 
+# Pydantic schemas
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 # --- User ---
 class UserCreate(BaseModel):
     email: EmailStr
@@ -14,7 +19,7 @@ class UserOut(BaseModel):
         from_attributes = True # read attributes from objects and store them
 
 # --- Habit ---
-class HabbitCreate(BaseModel):
+class HabitCreate(BaseModel):
     name: str
     typical_cost: float
     
