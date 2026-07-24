@@ -13,3 +13,10 @@ engine = create_engine(
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
+def get_db():
+    db = SessionLocal() # opens a new db session
+    try:
+        yield db # hands sessions to whatever route asked for it
+    finally:
+        db.close() # runs after the route finishes, no matter what
