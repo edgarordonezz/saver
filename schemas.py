@@ -47,3 +47,16 @@ class LoggedEntryOut(BaseModel):
 
     class Config:
         from_attributes = True
+        
+# --- Insights ---
+class HabitSummary(BaseModel):
+    habit_id: int
+    name: str
+    total_saved: float
+    times_skipped: int
+    longest_streak: int
+
+class UserSummary(BaseModel):
+    total_saved: float
+    total_times_skipped: int
+    habits: list[HabitSummary]
