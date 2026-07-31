@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 from database import get_db
 from models import User
-from schemas import Token, UserCreate, UserOut
+from schemas import LoginRequest, Token, UserCreate, UserOut
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login") # pulls token out of Authorization
 router = APIRouter(tags=["auth"])
@@ -70,18 +70,16 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == form_data.username).first() # query for user whose email matches form_data.username (field is called username by OAuth2 but we're putting email into it)
-    if not user or not pwd_context.verify(form_data.password, user.hashed_password):
+def login(credentials: LoginRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == credentials.email).first()
+    if not user or not pwd_context.verify(credentials.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Incorrect email or password")
 
-    # build a signed JWT and return it in response body
     access_token = create_access_token(
         data={"sub": str(user.id)}, # type: ignore
         expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     return {"access_token": access_token, "token_type": "bearer"}
-
 
 @router.get("/me", response_model=UserOut)
 def read_current_user(current_user: User = Depends(get_current_user)):

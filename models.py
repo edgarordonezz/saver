@@ -26,14 +26,14 @@ class Habit(Base):
 
     # one owner can have many habits
     owner = relationship("User", back_populates="habits")
-    # many entries can belong to one habit
-    entries = relationship("LoggedEntry", back_populates="habit")
+    # many entries can belong to one habit; deleting a habit deletes its entries too
+    entries = relationship("LoggedEntry", back_populates="habit", cascade="all, delete-orphan")
 
 # User tables and their attributes (PK=logged_entries.id, Fk=habits.id)
 class LoggedEntry(Base):
     __tablename__ = "logged_entries"
     id: Mapped[int] = mapped_column(primary_key=True)
-    habit_id: Mapped[int] = mapped_column(ForeignKey("habits.id"))
+    habit_id: Mapped[int] = mapped_column(ForeignKey("habits.id", ondelete="CASCADE"))
     date: Mapped[date_] = mapped_column(Date, nullable=False)
     skipped: Mapped[bool] = mapped_column(default=True)
     amount: Mapped[float] = mapped_column(Float, nullable=False)

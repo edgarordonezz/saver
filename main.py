@@ -14,3 +14,14 @@ app.include_router(auth_router)
 app.include_router(habits_router)
 app.include_router(entries_router)
 app.include_router(summary_router)
+
+# Add cors so React can talk to my API
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

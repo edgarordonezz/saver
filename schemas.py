@@ -60,3 +60,7 @@ class UserSummary(BaseModel):
     total_saved: float
     total_times_skipped: int
     habits: list[HabitSummary]
+    
+class LoginRequest(BaseModel):
+    email: str
+    password: str
