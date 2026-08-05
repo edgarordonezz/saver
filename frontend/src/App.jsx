@@ -1,47 +1,24 @@
 import { useState } from "react";
 import { useAuth } from "./context/AuthContext";
+import LoginForm from "./components/LoginForm";
+import RegisterForm from "./components/RegisterForm";
+import Dashboard from "./components/Dashboard";
 
 function App() {
-  const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => { 
-    e.preventDefault();
-    setError(""); 
-    setLoading(true);
-    try {
-      await login(email, password);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [showLogin, setShowLogin] = useState(true);
+  const { isAuthenticated } = useAuth();
 
-  return (
+  if (isAuthenticated) {
+    return <Dashboard />;
+  }
+
+  return ( 
     <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Log in"}
-        </button>
-      </form>
+      {showLogin ? <LoginForm /> : <RegisterForm onRegistered={() => setShowLogin(true)} />}
+      <button onClick={() => setShowLogin(!showLogin)}>
+        {showLogin ? "Need an account? Register" : "Already have an account? Log in"}
+      </button>
     </div>
   );
 }
