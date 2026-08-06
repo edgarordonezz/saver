@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { authFetch } from "../api";
 
-function AddHabitForm({ onHabitAdded}) {
+function AddHabitForm({ onHabitAdded }) {
     const [name, setName] = useState("");
     const [typicalCost, setTypicalCost] = useState("");
     const [error, setError] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try { 
+        try {
             const res = await authFetch("http://localhost:8000/habits/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -29,17 +29,18 @@ function AddHabitForm({ onHabitAdded}) {
     return (
         <form onSubmit={handleSubmit}>
             <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Habit name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Habit name"
             />
             <input
-            type="number"
-            value={typicalCost}
-            onChange={(e) => setTypicalCost(e.target.value)}
-            placeholder="Typical Cost"
+                type="number"
+                value={typicalCost}
+                onChange={(e) => setTypicalCost(e.target.value)}
+                placeholder="Typical Cost"
+                step="0.01"
             />
-            {error && <p style={{ color : "red" }}>{error}</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
             <button type="submit">Add Habit</button>
         </form>
     );
