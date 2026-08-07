@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-function LoginForm() {
+function LoginForm({ onSwitchToRegister }) {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,27 +21,32 @@ function LoginForm() {
     }
   };
 
-  return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Log in"}
+return (
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1>Login</h1>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Log in"}
+          </button>
+        </form>
+        <button className="auth-switch" onClick={onSwitchToRegister}>
+          Need an account? Register
         </button>
-      </form>
+      </div>
     </div>
   );
 }

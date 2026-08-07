@@ -54,7 +54,6 @@ function Dashboard() {
             <div className="dashboard-header">
                 <button onClick={logout}>Log out</button>
             </div>
-            <SummaryWidget refreshTrigger={refreshCount}/>
             <AddHabitForm onHabitAdded={fetchHabits} />
             <h1>Your Habits</h1>
             {loading && <p>Loading...</p>}
@@ -84,6 +83,7 @@ function Dashboard() {
                         </tbody>
                     </table>
                 ))}
+                <SummaryWidget refreshTrigger={refreshCount}/>
         </div>
     );
 }

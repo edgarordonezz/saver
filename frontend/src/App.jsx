@@ -15,10 +15,13 @@ function App() {
 
   return ( 
     <div>
-      {showLogin ? <LoginForm /> : <RegisterForm onRegistered={() => setShowLogin(true)} />}
-      <button onClick={() => setShowLogin(!showLogin)}>
-        {showLogin ? "Need an account? Register" : "Already have an account? Log in"}
-      </button>
+      {showLogin ? (
+        <LoginForm onSwitchToRegister={() => setShowLogin(false)} />
+      ) : (
+        <RegisterForm 
+          onRegistered={() => setShowLogin(true)}
+          onSwitchToLogin={() => setShowLogin(true)} />
+      )}
     </div>
   );
 }
