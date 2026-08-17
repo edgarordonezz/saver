@@ -27,7 +27,7 @@ function AddHabitForm({ onHabitAdded }) {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="add-habit-form" onSubmit={handleSubmit}>
             <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}

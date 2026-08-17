@@ -1,30 +1,8 @@
-import { useState, useEffect } from "react";
-import { authFetch } from "../api";
+import { useState } from "react";
 
-function SummaryWidget({ refreshTrigger }) {
-    const [summary, setSummary] = useState(null)
-    const [expanded, setExpanded] = useState(false)
-    const [error, setError] = useState("")
+function SummaryWidget({ summary }) {
+    const [expanded, setExpanded] = useState(false);
 
-    const fetchSummary = async () => {
-        try {
-            const res = await authFetch(`http://localhost:8000/summary/`);
-            if (!res.ok) {
-                const err = await res.json().catch(() => ([]));
-                throw new Error(err.detail || "Failed to load summary");
-            }
-            const data = await res.json();
-            setSummary(data);
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-
-    useEffect(() => {
-        fetchSummary();
-    }, [refreshTrigger]);
-
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
     if (!summary) return null;
 
     const bestStreak = summary.habits.reduce(
