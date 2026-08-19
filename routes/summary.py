@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -10,14 +11,23 @@ router = APIRouter(prefix="/summary", tags=["summary"])
 def calculate_longest_streak(entries: list[models.LoggedEntry]) -> int:
     # entries must already be sorted by date ascending
     longest = current = 0
-    for entry in entries:
-        if entry.skipped:
-            current += 1
-            longest = max(longest, current)
-        else:
-            current = 0
-    return longest
+    previous = None
 
+    for entry in entries:
+        if not entry.skipped:
+            current = 0
+        else:
+            if previous is not None and (entry.date - previous).days == 1:
+                current += 1
+            else:
+                current = 1
+            longest = max(longest, current)
+
+        previous = entry.date
+
+    return longest
+            
+            
 @router.get("/", response_model=schemas.UserSummary)
 def get_summary(db: Session = Depends(get_db),
                 current_user: models.User = Depends(get_current_user)):
